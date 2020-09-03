@@ -81,15 +81,28 @@ namespace APIBoletim.Repositories
 
 
 
-
+        /// <summary>
+        /// Aplica o comando do sql server UPDATE em 
+        /// </summary>
+        /// <param name="a"></param>
+        /// <returns></returns>
         public Aluno Alterar(Aluno a)
         {
-            throw new NotImplementedException();
+            
             //Abrir conexao
             cmd.Connection = conexao.Conectar();
             // Preparar a query 
+
+            cmd.CommandText = "UPDATE Aluno SET Nome= @nome, RA = @ra, Idade= @idade WHERE IdAluno= @id";
+
+            cmd.Parameters.AddWithValue("@nome", a.Nome);
+            cmd.Parameters.AddWithValue("@ra", a.Ra);
+            cmd.Parameters.AddWithValue("@idade", a.Idade);
+            cmd.Parameters.AddWithValue("@id", a.IdAluno);
+
             //Fechar conexao
             conexao.Desconectar();
+            return a;
         }
         
 
@@ -110,7 +123,7 @@ namespace APIBoletim.Repositories
 
 
             // Preparar a query 
-            cmd.CommandText = "SELECT * FROM Aluno WHERE IdAluno = @id ";
+            cmd.CommandText = "SELECT * FROM Aluno WHERE IdAluno = @id";
             // Atribuímos as variaveis que vêm como argumento
             cmd.Parameters.AddWithValue("@id", id);
 
@@ -137,12 +150,20 @@ namespace APIBoletim.Repositories
 
         public Aluno Excluir(Aluno a)
         {
-            throw new NotImplementedException();
             //Abrir conexao
             cmd.Connection = conexao.Conectar();
+
             // Preparar a query 
+
+            cmd.CommandText = "DELETE * FROM Aluno WHERE IdAluno = @id";
+
+            cmd.Parameters.AddWithValue("@id", a.IdAluno);
+
+            //Comando responsável por injetar dados no banco
+            cmd.ExecuteNonQuery();
             //Fechar conexao
             conexao.Desconectar();
+            return a;
         }
 
 
