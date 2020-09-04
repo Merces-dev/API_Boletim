@@ -86,25 +86,32 @@ namespace APIBoletim.Repositories
         /// </summary>
         /// <param name="a"></param>
         /// <returns></returns>
-        public Aluno Alterar(Aluno a)
+        public Aluno Alterar(int id, Aluno a)
         {
-            
             //Abrir conexao
             cmd.Connection = conexao.Conectar();
             // Preparar a query 
-
-            cmd.CommandText = "UPDATE Aluno SET Nome= @nome, RA = @ra, Idade= @idade WHERE IdAluno= @id";
-
+            cmd.CommandText =
+                           "UPDATE Aluno SET " +
+                           "Nome = @nome," +
+                           "Ra = @ra," +
+                           "Idade = @idade  WHERE IdAluno = @id";
             cmd.Parameters.AddWithValue("@nome", a.Nome);
             cmd.Parameters.AddWithValue("@ra", a.Ra);
             cmd.Parameters.AddWithValue("@idade", a.Idade);
-            cmd.Parameters.AddWithValue("@id", a.IdAluno);
+
+            cmd.Parameters.AddWithValue("@id", id);
+
+
+            //Comando responsável por injetar dados no banco
+            cmd.ExecuteNonQuery();
 
             //Fechar conexao
             conexao.Desconectar();
+
             return a;
         }
-        
+
 
 
 
@@ -146,24 +153,19 @@ namespace APIBoletim.Repositories
 
 
 
-
-
-        public Aluno Excluir(Aluno a)
+        public void Excluir(int id)
         {
             //Abrir conexao
             cmd.Connection = conexao.Conectar();
 
             // Preparar a query 
-
-            cmd.CommandText = "DELETE * FROM Aluno WHERE IdAluno = @id";
-
-            cmd.Parameters.AddWithValue("@id", a.IdAluno);
-
-            //Comando responsável por injetar dados no banco
+            cmd.CommandText = ("DELETE FROM Aluno WHERE IdAluno = @id");
+            cmd.Parameters.AddWithValue("@id", id);
+            
             cmd.ExecuteNonQuery();
+
             //Fechar conexao
             conexao.Desconectar();
-            return a;
         }
 
 
